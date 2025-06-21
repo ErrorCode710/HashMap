@@ -48,20 +48,25 @@ class HashMap {
     this.restriction(index);
 
     if (currentLoad > this.loadfactor) {
-      // console.log(`currentLoad Vale: ${currentLoad} and loadFactor Value: ${this.loadfactor}`);
+      console.log(`currentLoad Vale: ${currentLoad} and loadFactor Value: ${this.loadfactor}`);
       this.resize();
     }
+    // TODO
+    //When inserting into a bucket, if it’s empty, we insert the head of Linked List.
+    // If a head exists in a bucket, we follow that Linked List to add to the end of it.
 
-    if (this.buckets[index] === null) {
+    if (this.buckets[index].length === 0) {
+      // I replace the empty buckets with the node
       this.buckets[index] = new Node(key, value);
+      // console.log(this.buckets[index]);
     } else {
-      let current = this.buckets[index];
-
+      let current = this.buckets[index]; //
+      console.log("This is the current");
       console.log(current);
-      // while (current.next !== null) {
-      //   current = current.next;
-      // }
-      // current.next = node;
+      while (current.next !== null) {
+        current = current.next;
+      }
+      current.next = new Node(key, value);
     }
     // this.buckets[index].push([key, value]);
     // this.buckets[index].push([key, value]);
@@ -89,16 +94,18 @@ class HashMap {
     for (let i = 0; i < this.capacity; i++) {
       this.buckets[i] = [];
     }
+    console.log("Flat Value");
+    console.log(flat);
 
     this.size = 0;
 
-    for (const [key, value] of flat) {
-      const hash = this.hash(key);
-      const index = hash % this.capacity;
+    // for (const [key, value] of flat) {
+    //   const hash = this.hash(key);
+    //   const index = hash % this.capacity;
 
-      this.buckets[index].push([key, value]);
-      this.size++;
-    }
+    //   this.buckets[index].push([key, value]);
+    //   this.size++;
+    // }
   }
   bucketCounter() {
     const count = this.buckets.length;
