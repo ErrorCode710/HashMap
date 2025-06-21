@@ -27,19 +27,16 @@ class HashMap {
   }
   set(key, value) {
     const hash = this.hash(key);
-    const index = hash % this.capacity;
-
     const currentLoad = this.size / this.capacity;
 
-    this.restriction(index);
-
     if (currentLoad > this.loadfactor) {
-      console.log(`currentLoad Vale: ${currentLoad} and loadFactor Value: ${this.loadfactor}`);
       this.resize();
     }
 
+    const index = hash % this.capacity;
+    this.restriction(index);
     this.insert(index, key, value);
-
+    // this.insert(this.hash(key) % this.capacity, key, value);
     this.size++;
   }
   insert(index, key, value) {
@@ -64,8 +61,6 @@ class HashMap {
         current.value = value;
         return;
       }
-      // console.log("Current Value");
-      // console.log(current);
 
       current.next = new Node(key, value);
     }
@@ -75,38 +70,20 @@ class HashMap {
     // 1. Search through all of the buckets
     // 2. Hash the key first and search for its specific key and gets it value
     // aproach 1
-    // const hash = this.hash(key);
-    // const index = hash % this.capacity;
+    const hash = this.hash(key);
+    const index = hash % this.capacity;
 
-    // let current = this.buckets[index];
+    let current = this.buckets[index];
+    if (current.length !== 0) {
+      while (current !== null) {
+        if (current.key === key) {
+          return `${current.value}`;
+        }
+        current = current.next;
+      }
+    }
 
-    // if (current.key === key) {
-    //   // console.log(`This is current key ${current.key} and its value ${current.value}`);
-    //   return `${current.value}`;
-    // }
-    // while (current.next !== null) {
-    //   current = current.next;
-    // }
-    // if (current.key === key) {
-    //   return `${current.value}`;
-    // }
-
-    // approach 2
-    // for (const head of this.buckets) {
-    //   // console.log(node)
-    //   let current = head;
-
-    //   if (current.length !== 0) {
-    //     // console.log(`Key: ${head.key}, Value: ${head.value}`);
-
-    //     while (current !== null) {
-    //       if (current.key === key) {
-    //         return `${current.value}`;
-    //       }
-    //       current = current.next;
-    //     }
-    //   }
-    // }
+    return null;
   }
 
   print() {
@@ -124,12 +101,24 @@ class HashMap {
     const oldbuckets = this.buckets;
     this.capacity = this.capacity * 2;
 
-    const flat = oldbuckets.flat();
+    // const flat = oldbuckets.flat();
 
+    const flat = [];
+
+    for (const head of oldbuckets) {
+      let current = head;
+      if (current.length !== 0) {
+        while (current !== null) {
+          flat.push({ key: current.key, value: current.value });
+          current = current.next;
+        }
+      }
+    }
     for (let i = 0; i < this.capacity; i++) {
       this.buckets[i] = [];
     }
-    console.log(flat);
+    // console.log("Flat Value");
+    // console.log(flat);
 
     this.size = 0;
 
@@ -137,7 +126,8 @@ class HashMap {
       const hash = this.hash(key);
       const index = hash % this.capacity;
 
-      this.insert(index, key, value);
+      // this.insert(index, key, value);
+      this.insert(this.hash(key) % this.capacity, key, value);
       this.size++;
     }
   }
@@ -170,11 +160,38 @@ test.set("ice cream", "white");
 test.set("jacket", "blue");
 test.set("kite", "pink");
 test.set("lion", "golden");
-test.set("tiger", "divine");
+test.set("tiger", "divine"); // 0.75 current load = resizing of buckets
+//#region
+// {
+//   "key": "tiger",
+//   "value": "divine",
+//   "hash": 110358719,
+//   "index": 15,
+//   "currentLoad": 0.75
+// }
+
+// {
+//   "key": "tiger",
+//   "value": "divine",
+//   "hash": 110358719,
+//   "index": 15,
+//   "currentLoad": 0.75,
+//   "capacity": 16
+// }
+
+// {
+//   "key": "tiger",
+//   "value": "divine",
+//   "hash": 110358719,
+//   "index": 15,
+//   "currentLoad": 0.75,
+//   "capacity": 16
+// }
+//#endregion
 test.set("asta", "clover");
 test.set("asta", "demon");
 test.set("asta", "luck");
 test.set("aaap", "Anti-magic");
 
 test.print();
-console.log(test.get("elephant"));
+console.log(test.get("tiger"));
