@@ -26,54 +26,51 @@ class HashMap {
     }
   }
   set(key, value) {
-    // method to put the value on the buckets
-    // TODO: Make a bucket checker it checks if the buckets is nearly full dependes on the load factor increase the bucket twice
-    // TODO: Add a condition if the key is duplicate replace the old value to the new value
-
-    // ANALYSIS
-    // I NOTICE ITS LIKE IT KEEP LOOPING
-    // ITS BECAUSE ITS KEEP ADDING ON THE SIZE IF WE USE THE SET
-
-    // SET FLOW
-    // CHECK CURRENT LOAD
-    // IF CURRENT LOAD IS GREATHER THAN LOADFACTOR RESIZE BUCKETS THEN PUSH HASH ON THE BUCKETS
-    // ELSE PUSH HASH ON THE BUCKETS
-
     const hash = this.hash(key);
     const index = hash % this.capacity;
-    // const node = new Node(key, value);
 
     const currentLoad = this.size / this.capacity;
-    // console.log(`This is node.next value :${node.next}`);
+
     this.restriction(index);
 
     if (currentLoad > this.loadfactor) {
       console.log(`currentLoad Vale: ${currentLoad} and loadFactor Value: ${this.loadfactor}`);
       this.resize();
     }
-    // TODO
-    //When inserting into a bucket, if it’s empty, we insert the head of Linked List.
-    // If a head exists in a bucket, we follow that Linked List to add to the end of it.
 
+    this.insert(index, key, value);
+
+    this.size++;
+  }
+  insert(index, key, value) {
     if (this.buckets[index].length === 0) {
-      // I replace the empty buckets with the node
+      // PROBLEM: asta
+      // PSEUDOCODE: FOR KEY DUPLICATION OVERRIDE
+      //1.  CHECK IF KEY IS ALREADY EXSIST
+      //  1.1 How to Check?
+      //  1.a loop through the buckets if the key is exist
+      //2. OVERIDE THE VALUE
+      let current = this.buckets[index];
+
       this.buckets[index] = new Node(key, value);
-      // console.log(this.buckets[index]);
     } else {
-      let current = this.buckets[index]; //
-      console.log("This is the current");
-      console.log(current);
+      let current = this.buckets[index];
+
       while (current.next !== null) {
         current = current.next;
       }
+      if (current.key === key) {
+        // duplicate checker
+        current.value = value;
+        return;
+      }
+      console.log("Current Value");
+      console.log(current);
+
       current.next = new Node(key, value);
     }
-    // this.buckets[index].push([key, value]);
-    // this.buckets[index].push([key, value]);
-    this.size++;
-    // console.log(this.buckets);
   }
-  insert() {}
+
   print() {
     const currentLoad = this.size / this.capacity;
     // console.log(this.buckets);
@@ -94,42 +91,21 @@ class HashMap {
     for (let i = 0; i < this.capacity; i++) {
       this.buckets[i] = [];
     }
-    console.log("Flat Value");
-    console.log(flat);
 
     this.size = 0;
 
-    // for (const [key, value] of flat) {
-    //   const hash = this.hash(key);
-    //   const index = hash % this.capacity;
-
-    //   this.buckets[index].push([key, value]);
-    //   this.size++;
-    // }
+    for (const { key, value } of flat) {
+      const hash = this.hash(key);
+      const index = hash % this.capacity;
+      // this.buckets[index].push([key, value]);
+      this.insert(index, key, value);
+      this.size++;
+    }
   }
   bucketCounter() {
     const count = this.buckets.length;
 
     console.log(`This is the Total buckets: ${count}`);
-  }
-}
-
-class LinkedList {
-  constructor() {
-    this.head = null;
-  }
-  append(value) {
-    const node = new Node();
-
-    if (this.head === null) {
-      this.head = node;
-    } else {
-      let current = this.head;
-      while (current.next !== null) {
-        current = current.next;
-      }
-      current.next = node;
-    }
   }
 }
 
@@ -143,18 +119,21 @@ class Node {
 
 const test = new HashMap();
 
-test.set("apple", "red");
-test.set("banana", "yellow");
-test.set("carrot", "orange");
-test.set("dog", "brown");
-test.set("elephant", "gray"); // 0.25 currentLOad
-test.set("frog", "green");
-test.set("grape", "purple");
-test.set("hat", "black");
-test.set("ice cream", "white");
-test.set("jacket", "blue");
-test.set("kite", "pink");
-test.set("lion", "golden");
-test.set("tiger", "divine");
+// test.set("apple", "red");
+// test.set("banana", "yellow");
+// test.set("carrot", "orange");
+// test.set("dog", "brown");
+// test.set("elephant", "gray"); // 0.25 currentLOad
+// test.set("frog", "green");
+// test.set("grape", "purple");
+// test.set("hat", "black");
+// test.set("ice cream", "white");
+// test.set("jacket", "blue");
+// test.set("kite", "pink");
+// test.set("lion", "golden");
+// test.set("tiger", "divine");
 test.set("asta", "clover");
+test.set("asta", "demon");
+test.set("asta", "luck");
+test.set("aaap", "Anti-magic");
 test.print();
