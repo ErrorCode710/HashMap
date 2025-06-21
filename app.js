@@ -64,11 +64,49 @@ class HashMap {
         current.value = value;
         return;
       }
-      console.log("Current Value");
-      console.log(current);
+      // console.log("Current Value");
+      // console.log(current);
 
       current.next = new Node(key, value);
     }
+  }
+  get(key) {
+    // 2 Approach
+    // 1. Search through all of the buckets
+    // 2. Hash the key first and search for its specific key and gets it value
+    // aproach 1
+    // const hash = this.hash(key);
+    // const index = hash % this.capacity;
+
+    // let current = this.buckets[index];
+
+    // if (current.key === key) {
+    //   // console.log(`This is current key ${current.key} and its value ${current.value}`);
+    //   return `${current.value}`;
+    // }
+    // while (current.next !== null) {
+    //   current = current.next;
+    // }
+    // if (current.key === key) {
+    //   return `${current.value}`;
+    // }
+
+    // approach 2
+    // for (const head of this.buckets) {
+    //   // console.log(node)
+    //   let current = head;
+
+    //   if (current.length !== 0) {
+    //     // console.log(`Key: ${head.key}, Value: ${head.value}`);
+
+    //     while (current !== null) {
+    //       if (current.key === key) {
+    //         return `${current.value}`;
+    //       }
+    //       current = current.next;
+    //     }
+    //   }
+    // }
   }
 
   print() {
@@ -91,13 +129,14 @@ class HashMap {
     for (let i = 0; i < this.capacity; i++) {
       this.buckets[i] = [];
     }
+    console.log(flat);
 
     this.size = 0;
 
     for (const { key, value } of flat) {
       const hash = this.hash(key);
       const index = hash % this.capacity;
-      // this.buckets[index].push([key, value]);
+
       this.insert(index, key, value);
       this.size++;
     }
@@ -119,21 +158,23 @@ class Node {
 
 const test = new HashMap();
 
-// test.set("apple", "red");
-// test.set("banana", "yellow");
-// test.set("carrot", "orange");
-// test.set("dog", "brown");
-// test.set("elephant", "gray"); // 0.25 currentLOad
-// test.set("frog", "green");
-// test.set("grape", "purple");
-// test.set("hat", "black");
-// test.set("ice cream", "white");
-// test.set("jacket", "blue");
-// test.set("kite", "pink");
-// test.set("lion", "golden");
-// test.set("tiger", "divine");
+test.set("apple", "red");
+test.set("banana", "yellow");
+test.set("carrot", "orange");
+test.set("dog", "brown");
+test.set("elephant", "gray"); // 0.25 currentLOad
+test.set("frog", "green");
+test.set("grape", "purple");
+test.set("hat", "black");
+test.set("ice cream", "white");
+test.set("jacket", "blue");
+test.set("kite", "pink");
+test.set("lion", "golden");
+test.set("tiger", "divine");
 test.set("asta", "clover");
 test.set("asta", "demon");
 test.set("asta", "luck");
 test.set("aaap", "Anti-magic");
+
 test.print();
+console.log(test.get("elephant"));
