@@ -92,6 +92,57 @@ class HashMap {
     }
     return false;
   }
+  length() {
+    const count = this.buckets.length;
+
+    console.log(`the number of stored keys: ${count}`);
+    return count;
+  }
+  clear() {
+    for (let i = 0; i < this.capacity; i++) {
+      this.buckets[i] = [];
+    }
+    this.size = 0;
+  }
+  keys() {
+    const keys = [];
+    for (const head of this.buckets) {
+      let current = head;
+      if (current.length !== 0) {
+        while (current !== null) {
+          keys.push(current.key);
+          current = current.next;
+        }
+      }
+    }
+    console.log(keys);
+  }
+  values() {
+    const values = [];
+    for (const head of this.buckets) {
+      let current = head;
+      if (current.length !== 0) {
+        while (current !== null) {
+          values.push(current.value);
+          current = current.next;
+        }
+      }
+    }
+    console.log(values);
+  }
+  entries() {
+    const pair = [];
+    for (const head of this.buckets) {
+      let current = head;
+      if (current.length !== 0) {
+        while (current !== null) {
+          pair.push([current.key, current.value]);
+          current = current.next;
+        }
+      }
+    }
+    console.log(pair);
+  }
   //#region  Helper Method
   print() {
     const currentLoad = this.size / this.capacity;
@@ -99,7 +150,7 @@ class HashMap {
     console.log(this.size);
     console.log(currentLoad);
     console.log(this.buckets);
-    this.bucketCounter();
+    this.length();
   }
   resize() {
     console.log("Resizing Start");
@@ -141,11 +192,7 @@ class HashMap {
       throw new Error("Trying to access index out of bounds");
     }
   }
-  bucketCounter() {
-    const count = this.buckets.length;
 
-    console.log(`This is the Total buckets: ${count}`);
-  }
   insert(index, key, value) {
     if (this.buckets[index].length === 0) {
       let current = this.buckets[index];
@@ -230,3 +277,8 @@ test.print();
 console.log(test.get("hat"));
 // test.remove("aao");
 console.log(test.remove("aaap"));
+console.log(test.length());
+test.keys();
+test.values();
+test.entries();
+// test.clear();
